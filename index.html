@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="ВСКРЫТИЕ">
+<title>ВСКРЫТИЕ · Паста и сыворотка</title>
+<style>
+:root{--bg:#000;--fg:#fff;--neon:#37FF08;--ink:#000;--dim:rgba(255,255,255,.58);--soft:rgba(255,255,255,.82);--line:rgba(255,255,255,.2);--f:Arial,"Helvetica Neue",Helvetica,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font-family:var(--f);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-top:max(24px,env(safe-area-inset-top,0px));padding-bottom:max(48px,env(safe-area-inset-bottom,0px))}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+button:focus-visible,a:focus-visible,textarea:focus-visible,.cut:focus-visible{outline:2px solid var(--neon);outline-offset:3px}
+a{color:var(--fg)}
+p{margin:0}
+h1,h2,h3{margin:0;font-weight:700;line-height:1;text-wrap:balance}
+.lab{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim)}
+h1{font-size:clamp(46px,14vw,92px);letter-spacing:-.045em;text-transform:uppercase;margin-top:10px}
+h2{font-size:clamp(28px,8vw,42px);letter-spacing:-.03em;text-transform:uppercase}
+.intro{margin-top:16px;font-size:17px;color:var(--soft);max-width:34em}
+.stat{display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:18px;font-size:14px;color:var(--dim)}
+.stat b{color:var(--fg);font-variant-numeric:tabular-nums}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:26px 0 8px}
+.nav a{display:block;text-decoration:none;border:2px solid var(--line);padding:12px}
+.nav a b{display:block;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.nav a span{display:block;font-size:12.5px;color:var(--dim);margin-top:3px;line-height:1.35}
+.nav a:hover{border-color:var(--fg)}
+.sec{margin-top:52px;scroll-margin-top:16px}
+.sec>p.sub{margin-top:8px;color:var(--dim);font-size:14px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 6px}
+.filters button{font-size:13px;border:2px solid var(--line);padding:9px 12px;min-height:42px}
+.filters button.on{background:var(--fg);color:var(--ink);border-color:var(--fg)}
+.list{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.case{border:2px solid var(--fg);padding:18px 16px 0}
+.case.done{border-color:var(--line)}
+.case.grown{border-color:var(--fg)}
+.top{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.num{font-size:44px;font-weight:700;line-height:.82;letter-spacing:-.05em;font-variant-numeric:tabular-nums;min-width:56px}
+.case.done .num{color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.chip{font-size:11px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--line);padding:3px 7px;color:var(--soft)}
+.q{font-size:clamp(20px,5.6vw,25px);letter-spacing:-.015em;line-height:1.15}
+.g{color:var(--dim);font-weight:400}
+.layers{display:flex;flex-direction:column;gap:0;margin-top:14px}
+.layer{border-top:1px solid var(--line);padding:14px 0}
+.layer .t{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--neon);margin-bottom:6px}
+.layer p{font-size:15.5px;color:var(--soft)}
+.layer .act{font-size:17px;font-weight:700;color:var(--fg)}
+.layer .eff{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.layer .doc{margin-top:10px;border-left:3px solid var(--fg);padding-left:10px;font-size:14px;color:var(--fg)}
+.cut{position:relative;height:58px;margin:4px -16px 0;padding:0 16px;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:ew-resize;--p:0}
+.cut .rail{position:absolute;left:16px;right:16px;top:22px;height:14px}
+.cut .dash{position:absolute;left:0;right:0;top:6px;height:2px;background:repeating-linear-gradient(90deg,var(--neon) 0 10px,transparent 10px 18px)}
+.cut .done{position:absolute;left:0;top:0;height:14px;width:calc(var(--p)*100%);background:var(--bg)}
+.cut .done::before,.cut .done::after{content:"";position:absolute;left:0;right:0;height:1px;background:var(--fg)}
+.cut .done::before{top:1px}
+.cut .done::after{bottom:1px}
+.cut .blade{position:absolute;top:-4px;left:calc(var(--p)*100%);width:4px;height:22px;margin-left:-2px;background:var(--neon)}
+.cut.back .done,.cut.back .blade{transition:width .25s ease,left .25s ease}
+.cut .cl{position:absolute;left:16px;right:16px;top:42px;font-size:11.5px;letter-spacing:.06em;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stamp{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding:12px 0 14px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.stamp b{color:var(--neon);font-weight:700}
+.regrow{display:block;width:100%;margin:14px 0 16px;border:2px dashed var(--fg);padding:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:14px}
+.regrow span{display:block;font-weight:400;text-transform:none;letter-spacing:0;color:var(--dim);font-size:13px;margin-top:4px}
+.ask{margin:14px 0 16px}
+.ask p{font-size:15px;color:var(--soft);margin-bottom:10px}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:11px 18px;border:2px solid var(--fg);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.btn:hover{background:var(--fg);color:var(--ink)}
+.btn.go{background:var(--neon);border-color:var(--neon);color:var(--ink)}
+.btn.thin{border-color:var(--line);color:var(--soft)}
+.btn[disabled]{opacity:.3;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){
+.case.grown .q{animation:gl 5s infinite steps(1)}
+@keyframes gl{0%,88%{transform:none;text-shadow:none}90%{transform:translateX(3px);text-shadow:-3px 0 var(--neon)}92%{transform:translateX(-3px);text-shadow:3px 0 var(--fg)}94%{transform:none;text-shadow:none}}
+}
+.quiz{margin-top:18px;border:2px solid var(--fg);padding:18px}
+.quiz .qn{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.quiz .qq{font-size:20px;font-weight:700;line-height:1.25;margin:10px 0 4px}
+.quiz .qh{font-size:14px;color:var(--dim);margin-bottom:14px}
+.opt{display:block;width:100%;border:2px solid var(--line);padding:13px 14px;margin-top:8px;font-size:15px;line-height:1.35;min-height:48px}
+.opt:hover{border-color:var(--fg)}
+.opt.right{border-color:var(--neon)}
+.opt.wrong{border-color:var(--fg);text-decoration:line-through;color:var(--dim)}
+.opt[disabled]{cursor:default}
+.res{margin-top:14px;font-size:15px;color:var(--soft)}
+.sheet{margin-top:16px}
+.sheet h3{font-size:15px;text-transform:uppercase;letter-spacing:.08em;margin:26px 0 6px;color:var(--dim)}
+.sheet .it{display:grid;grid-template-columns:34px 1fr;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.sheet .it .n{font-size:13px;color:var(--dim);font-variant-numeric:tabular-nums;padding-top:2px}
+.sheet .it b{display:block;font-size:15.5px}
+.sheet .it span{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+ol.src{margin:16px 0 0;padding-left:22px;font-size:13.5px;line-height:1.55;color:var(--dim)}
+ol.src li{margin-bottom:8px}
+ol.src a{color:var(--soft);word-break:break-word}
+.save{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+textarea.code{width:100%;min-height:96px;background:transparent;color:var(--fg);border:2px solid var(--line);border-radius:0;padding:10px;font:13px/1.4 var(--f);word-break:break-all;resize:vertical}
+.note{font-size:14px;color:var(--dim)}
+.msg{font-size:14px;color:var(--neon);min-height:20px}
+.foot{margin-top:64px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;letter-spacing:.42em;color:var(--fg)}
+.empty{color:var(--dim);font-size:15px;padding:18px 0}
+@media (max-width:420px){.nav{grid-template-columns:1fr}.num{font-size:36px;min-width:44px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="lab">ВСКРЫТИЕ</div>
+<h1>Паста и сыворотка</h1>
+<p class="intro">56 дел · около 30 минут. Проведи пальцем по зелёной линии слева направо — дело вскроется на слой глубже. Три разреза — и дело вскрыто.</p>
+<div class="stat" id="stat"></div>
+<nav class="nav">
+<a href="#cases"><b>Дела</b><span>56 штук: как пользоваться, что даст, побочка</span></a>
+<a href="#quiz"><b>Контрольный</b><span>5 вопросов по вскрытым делам, 2 минуты</span></a>
+<a href="#sheet"><b>Шпаргалка</b><span>все «делай» одним списком</span></a>
+<a href="#sources"><b>Источники</b><span>28 ссылок на исследования и регуляторов</span></a>
+<a href="#save"><b>Сохранить</b><span>код прогресса и экран «Домой», 1 минута</span></a>
+</nav>
+</header>
+
+<section class="sec" id="cases">
+<h2>Дела</h2>
+<p class="sub">Фильтр показывает только нужное. Вскрытые дела со временем зарастают — тогда тапни и вспомни суть.</p>
+<div class="filters" id="filters"></div>
+<div class="list" id="list"></div>
+</section>
+
+<section class="sec" id="quiz">
+<h2>Контрольный</h2>
+<p class="sub">По улике выбери, что делать. Ошибка — и дело начнёт зарастать заново, с первого дня.</p>
+<div class="quiz" id="qbox"></div>
+</section>
+
+<section class="sec" id="sheet">
+<h2>Шпаргалка</h2>
+<p class="sub">Все действия из дел. Пролистать — 3 минуты.</p>
+<div class="sheet" id="sheetbox"></div>
+</section>
+
+<section class="sec" id="sources">
+<h2>Источники</h2>
+<p class="sub">Обзоры, мета-анализы, Cochrane, регуляторы, страницы производителя.</p>
+<ol class="src" id="srcbox"></ol>
+</section>
+
+<section class="sec" id="save">
+<h2>Сохранить</h2>
+<p class="sub">Прогресс хранится в этом браузере. Код — запасной ключ на случай очистки.</p>
+<div class="save">
+<p class="note">Safari иногда чистит данные сайтов. Добавь страницу на экран «Домой»: кнопка «Поделиться» → «На экран „Домой“» — так прогресс держится надёжнее.</p>
+<div class="row"><button class="btn" id="copy">Скопировать код</button><button class="btn thin" id="restore">Вернуть по коду</button></div>
+<textarea class="code" id="code" placeholder="Сюда появится код или вставь свой"></textarea>
+<p class="msg" id="msg"></p>
+</div>
+</section>
+
+<footer class="foot">ROTAZ</footer>
+</div>
+
+<script>
+var CAT={k:"Как пользоваться",d:"Что даст",p:"Побочка"};
+var PR={P:"Паста",S:"Сыворотка",O:"Паста и сыворотка"};
+var SRC=[
+{t:"Wierichs R.J. и др. Наногидроксиапатит для профилактики кариеса: систематический обзор и мета-анализ. Clin Oral Investig, 2022 (разбор Dental Elf)",u:"https://nationalelfservice.net/dentistry/caries/nano-hydroxyapatite-caries-prevention"},
+{t:"de Melo Alencar C. и др. Наногидроксиапатит при чувствительности дентина: систематический обзор и мета-анализ. J Dent, 2019 (разбор Dental Elf)",u:"https://nationalelfservice.net/dentistry/oral-health-other-health-conditions/nano-hydroxyapatite-dentine-hypersensitivity"},
+{t:"SCCS (научный комитет ЕС): заключение о безопасности нано-гидроксиапатита в средствах для рта, 2023",u:"https://www.personalcareinsights.com/news/sccs-deems-hydroxyapatite-nano-safe-for-use-in-oral-health-care-products.html"},
+{t:"Walsh T. и др. Фторсодержащие пасты разной концентрации. Cochrane, 2019 (разбор Dental Elf)",u:"https://nationalelfservice.net/dentistry/caries/fluoride-toothpaste-different-fluoride-concentrations-caries"},
+{t:"Riley P. и др. Продукты с ксилитом для профилактики кариеса. Cochrane, 2015",u:"https://www.cochrane.org/CD010743"},
+{t:"SBU (Швеция): аргинин и профилактика кариеса",u:"https://sbu.se/en/publications/sbu-assesses/arginine-and-caries-prevention"},
+{t:"Alli B.Y. и др. Лаурилсульфат натрия и рецидивирующий афтозный стоматит: систематический обзор. J Oral Pathol Med, 2019 (разбор Dental Elf)",u:"https://nationalelfservice.net/dentistry/oral-medicine-and-pathology/sodium-lauryl-sulphate-sls-sls-free-toothpaste-use-benefit-patients-recurrent-aphthous-stomatitis"},
+{t:"Valkenburg C. и др. Помогает ли паста удалять налёт: систематический обзор, 2016 (разбор Dental Elf)",u:"https://www.nationalelfservice.net/dentistry/oral-health-other-health-conditions/toothpaste-plaque-removal/"},
+{t:"Yaacob M. и др. Электрические и ручные щётки. Cochrane, 2014",u:"https://www.cochrane.org/CD002281/ORAL_powered-versus-manual-toothbrushes"},
+{t:"Worthington H.V. и др. Межзубная чистка дома. Cochrane, 2019",u:"https://www.cochrane.org/news/featured-review-home-use-devices-cleaning-between-teeth"},
+{t:"Oral Health Foundation: сплюнуть, а не полоскать",u:"https://dla.org.uk/spit-instead-of-rinsing-for-better-oral-health-oral-health-foundation-urges"},
+{t:"Mayo Clinic со ссылкой на Американскую стоматологическую ассоциацию: когда чистить зубы",u:"https://www.mayoclinic.org/healthy-lifestyle/adult-health/expert-answers/brushing-your-teeth/faq-20058193"},
+{t:"DermNet: контактные реакции на зубные пасты",u:"https://dermnetnz.org/topics/contact-reactions-to-toothpaste-and-other-oral-hygiene-products"},
+{t:"FDA: ксилит опасен для собак",u:"https://www.fda.gov/consumers/consumer-updates/paws-xylitol-its-dangerous-dogs"},
+{t:"Tiswell: Nano Пломба Mineral со фтором — состав, RDA, сноски",u:"https://tiswell-pro.ru/product/nano-plomba-mineral"},
+{t:"Tiswell: Nano Пломба Mineral без фтора — состав",u:"https://tiswell-pro.ru/product/nano-plomba-mineral-bez-ftora"},
+{t:"van Zuuren E.J. и др. Увлажняющие средства при экземе. Cochrane, 2017 (разбор NIHR)",u:"https://evidence.nihr.ac.uk/alert/moisturisers-improve-eczema-symptoms-and-lessen-the-need-for-corticosteroids"},
+{t:"Мета-анализ РКИ: увлажняющие средства с церамидами при атопическом дерматите. Indian J Dermatol, 2023",u:"https://pmc.ncbi.nlm.nih.gov/articles/PMC10162745/"},
+{t:"Fluhr J.W. и др. Глицерин и кожа: обзор. Br J Dermatol, 2008",u:"https://pubmed.ncbi.nlm.nih.gov/18510666/"},
+{t:"Американская академия дерматологии (AAD): советы при сухой коже",u:"https://www.aad.org/public/everyday-care/skin-care-basics/dry/dermatologists-tips-relieve-dry-skin"},
+{t:"AAD: как протестировать косметику перед использованием",u:"https://www.newswise.com/articles/how-to-test-skin-care-products-before-use"},
+{t:"FDA: что значит «гипоаллергенный»",u:"https://www.fda.gov/cosmetics/resources-consumers-cosmetics/cosmetics-safety-qa-hypoallergenic"},
+{t:"SCCS: заключение о феноксиэтаноле",u:"https://health.ec.europa.eu/publications/phenoxyethanol_en"},
+{t:"Регламент ЕС 2024/996: ограничения витамина А в косметике",u:"https://cosmeticobs.com/en/articles/news-59/regulation-2024996-restrictions-on-vitamin-a-arbutin-and-6-endocrine-disruptors-8029"},
+{t:"Obelis: срок годности и значок PAO",u:"https://www.obelis.net/news/expiration-date-and-pao-for-cosmetics/"},
+{t:"Словарь ингредиентов: Sodium Coco-Sulfate",u:"https://www.paulaschoice.nl/nl/sodium-coco-sulfate/ingredient-sodium-coco-sulfate.html"},
+{t:"Man M.Q. и др. Соотношение липидов рогового слоя и восстановление барьера, 1997",u:"https://pubmed.ncbi.nlm.nih.gov/9308554/"},
+{t:"CIR: оценка безопасности сквалана и сквалена",u:"https://hero.epa.gov/hero/index.cfm/reference/details/reference_id/4968730"}
+];
+var C=[
+{id:"k1",c:"k",p:"P",q:"После чистки — сплюнуть и не полоскать",v:"Oral Health Foundation советует после чистки только сплюнуть пену: вода смывает с зубов фтор. Цифра: 0 полосканий.",m:"Фтор работает и после щётки: остаток на эмали продолжает защищать её от кислоты налёта. Вода смывает этот запас за секунды.",d:"Сплюнь пену, рот водой не полощи.",e:"привычка",s:[10]},
+{id:"k2",c:"k",p:"P",q:"Ополаскиватель сразу после пасты гасит пасту",v:"Та же рекомендация: ополаскиватель сразу после чистки тоже смывает фтор, поэтому его берут в другое время дня.",m:"Любое полоскание уносит остаток пасты с зубов, даже если сама жидкость полезная.",d:"Ополаскиватель — после обеда, а не после чистки.",e:"минута",s:[10]},
+{id:"k3",c:"k",p:"P",q:"Две минуты, два раза в день",v:"Американская стоматологическая ассоциация: дважды в день минимум по 2 минуты. Производитель пасты пишет 2–3 минуты. Цифра: 2 × 2.",m:"Рот — это четыре зоны. За 2 минуты щётка проходит каждую по 30 секунд; быстрее — часть поверхностей остаётся и без щётки, и без фтора.",d:"Таймер на 2 минуты: четыре зоны по 30 секунд.",e:"привычка",s:[11,14]},
+{id:"k4",c:"k",p:"P",q:"После сока или лимонада — не хвататься за щётку",v:"После кислого — газировки, цитрусовых, кислых конфет — советуют подождать около часа. Цифра: 60 минут.",m:"Кислота размягчает верхний слой эмали, и щётка с пастой его стирает. За час слюна нейтрализует кислоту, и эмаль снова твердеет.",d:"Кислый завтрак — чисти зубы до еды или через час после.",e:"привычка",s:[11]},
+{id:"k5",c:"k",p:"P",q:"Щётка стареет быстрее тюбика",v:"Щётку меняют каждые 3–4 месяца или раньше, если щетина разошлась. Цифра: 3–4 месяца.",m:"Распушённая щетина плохо заходит под край десны и между зубами — туда, где копится налёт. А налёт снимает именно щётка.",d:"Поставь повтор в календаре на каждые 3 месяца.",e:"минута",s:[11]},
+{id:"k6",c:"k",p:"P",q:"Электрощётка снимает на 21% больше налёта",v:"Cochrane: через 3 месяца и дольше электрощётка снимает на 21% больше налёта и на 11% сильнее снижает воспаление дёсен, чем ручная. Уверенность средняя.",m:"Движения щетины делает мотор, поэтому результат меньше зависит от усталости, спешки и техники.",d:"При следующей замене щётки рассмотри электрическую.",e:"минута",s:[8]},
+{id:"k7",c:"k",p:"P",q:"Между зубами щётка бессильна",v:"Cochrane, 35 исследований: нить или межзубные ершики вместе со щёткой могут снижать налёт и воспаление дёсен сильнее одной щётки; ершики, вероятно, лучше нити. Уверенность низкая.",m:"У зуба пять поверхностей. Щётка достаёт до трёх, а две боковые прижаты к соседям.",d:"Раз в день — ершики или нить.",e:"2 минуты в день",s:[9]},
+{id:"k8",c:"k",p:"P",q:"Пена ничего не отскребает",v:"Обзор 10 исследований: с пастой щётка сняла около 49% налёта, без пасты — около 50%. Разницы нет, уверенность средняя.",m:"Налёт снимает механика щётки. Паста нужна, чтобы доставить на зубы фтор и гидроксиапатит. Значит, важнее, куда идёт щётка, чем сколько на ней пены.",d:"Следи за маршрутом щётки, а не за количеством пены.",e:"привычка",s:[7]},
+{id:"k9",c:"k",p:"P",q:"Чувствительность уходит не за один вечер",v:"В исследованиях наногидроксиапатита эффект проверяли через 4 недели — 3 месяца ежедневной чистки. Цифра: 4 недели минимум.",m:"Частицы оседают в открытых трубочках дентина понемногу, с каждой чисткой. Пока трубочки открыты, воздух и прикосновение доходят до нерва.",d:"Оцени зубы через 4 недели регулярной чистки.",e:"привычка",w:"Болит один зуб, болит ночью или долго после холодного — это не чувствительность, это к стоматологу.",s:[1]},
+{id:"k10",c:"k",p:"P",q:"У этой пасты есть двойник без фтора",v:"У Tiswell две Nano Пломбы Mineral: со фтором и без. В твоей на тюбике «с магнием и фтором», в составе со фтором — Sodium Monofluorophosphate. Цифра: 2 версии.",m:"Фтор — самое доказанное в тюбике. У гидроксиапатита пока нет доказательств такого же уровня, чтобы заменить фтор.",d:"Докупая, ищи в составе Sodium Monofluorophosphate.",e:"минута",s:[14,15,3]},
+{id:"k11",c:"k",p:"S",q:"Влажная кожа — лучшая подложка",v:"Американская академия дерматологии (AAD): увлажняющее средство наносят, пока кожа ещё влажная после душа или умывания.",m:"Глицерин и гиалуроновая кислота держат воду, а масла и силиконы сверху мешают ей испаряться. На влажной коже формула запирает воду, которая уже есть.",d:"Умылась — промокнула — сразу сыворотка.",e:"минута",s:[19]},
+{id:"k12",c:"k",p:"S",q:"Хватит одного-двух нажатий",v:"На коробке: 1–2 нажатия на чистую кожу лица лёгкими массирующими движениями. Цифра: 2.",m:"Формула плотная: стеарат глицерина, цетеариловый спирт, масла. Лишнее не впитается и останется плёнкой.",d:"Начни с одного нажатия, второе — на самые сухие зоны.",e:"минута",s:[]},
+{id:"k13",c:"k",p:"S",q:"Тест на руке — неделя, а не минута",v:"AAD: средство наносят на сгиб локтя 2 раза в день 7–10 дней. Реакции нет — можно на лицо. Цифра: 7–10 дней.",m:"Аллергия замедленного типа проявляется после нескольких дней повторного контакта. Один мазок вечером ничего не покажет.",d:"Капля на внутреннюю сторону локтя утром и вечером.",e:"неделя по минуте",s:[20]},
+{id:"k14",c:"k",p:"S",q:"Душ 5–10 минут, вода тёплая",v:"AAD при сухой коже: 5–10 минут, тёплая, а не горячая вода, дверь ванной закрыта. Цифра: 10 минут максимум.",m:"Горячая вода и долгий контакт вымывают собственные липиды кожи. Потом сыворотке приходится латать больше.",d:"Таймер в душе, вода чуть холоднее привычной.",e:"привычка",s:[19]},
+{id:"k15",c:"k",p:"S",q:"Полотенцем не трут",v:"AAD: кожу промакивают, потому что трение раздражает очень сухую кожу.",m:"Трение снимает верхние чешуйки рогового слоя — а это и есть барьер, который сыворотка пытается чинить.",d:"Полотенце прикладывай, не води.",e:"минута",s:[19]},
+{id:"k16",c:"k",p:"S",q:"Увлажнитель воздуха — половина ухода",v:"AAD советует увлажнитель в спальне на ночь — и регулярно его чистить.",m:"Чем суше воздух, тем быстрее вода испаряется с кожи. Увлажняющим компонентам сыворотки проще держать воду, когда её больше вокруг.",d:"Увлажнитель на ночь, мыть по инструкции.",e:"10 минут в неделю",s:[19]},
+{id:"k17",c:"k",p:"S",q:"Наносить по ощущению, а не по расписанию",v:"AAD: увлажняющее средство наносят несколько раз в день — каждый раз, когда кожа ощущается сухой.",m:"Стянутость — сигнал, что вода уходит быстрее, чем держится. Повторный слой восполняет то, что стёрлось за день.",d:"Стянуло — одно нажатие.",e:"минута",s:[19]},
+{id:"k18",c:"k",p:"S",q:"Мало — сверху крем",v:"AAD: кремы и мази увлажняют сильнее лосьонов.",m:"Чем больше в формуле жира и плёнкообразователей, тем меньше воды испаряется. Если лёгкого слоя не хватает, нужен слой плотнее.",d:"Через 2 недели всё ещё стягивает — добавь крем поверх.",e:"минута",s:[19]},
+{id:"k19",c:"k",p:"S",q:"«6М» на коробке — это таймер",v:"Значок открытой баночки с «6М» — срок годности после вскрытия. Цифра: 6 месяцев.",m:"После вскрытия в продукт попадают микробы. Консервантов хватает на этот срок, дальше защита формулы не гарантирована.",d:"Напиши маркером дату вскрытия на дне флакона.",e:"минута",s:[24]},
+{id:"k20",c:"k",p:"S",q:"Без отдушек — значит, вся рутина",v:"AAD при сухой коже: выбирать fragrance-free. Надпись «unscented» может прятать вещества, которые маскируют запах.",m:"Отдушки — частый раздражитель. Сыворотка без отдушек теряет смысл, если рядом ароматный гель для умывания.",d:"Проверь гель для умывания на parfum или fragrance в составе.",e:"5 минут",s:[19]},
+{id:"k21",c:"k",p:"S",q:"Повернула верх — и флакон не вскрывать",v:"На коробке: чтобы пользоваться, верх флакона поворачивают вправо. Это помпа, флакон не открывают.",m:"Помпа выдаёт дозу без пальцев внутри флакона. Чем меньше контакта с руками и воздухом, тем чище формула в пределах её 6 месяцев.",d:"Не разбирай флакон, чтобы добрать остатки.",e:"минута",s:[24]},
+{id:"d1",c:"d",p:"P",q:"Фтор — самое доказанное в тюбике",v:"Cochrane, 96 рандомизированных исследований: паста с 1000–1250 ppm фтора снижает кариес по сравнению с пастой без фтора. Уверенность высокая–средняя.",m:"Фтор встраивается в поверхность эмали, делает её устойчивее к кислоте налёта и помогает вернуть минералы в начальное поражение.",d:"Две чистки в день — это и есть приём.",e:"привычка",s:[3]},
+{id:"d2",c:"d",p:"P",q:"Фтор — не детская тема",v:"У взрослых паста с 1000–1100 ppm тоже уменьшала число новых поражённых поверхностей зубов. Уверенность средняя.",m:"Кислотные атаки идут всю жизнь: перекусы, сладкие напитки, кофе с сахаром. Фтор работает в любом возрасте, пока им пользуешься.",d:"Не меняй фторную пасту на «натуральную» без фтора.",e:"минута",s:[3]},
+{id:"d3",c:"d",p:"P",q:"Против чувствительности — работает",v:"Мета-анализ 8 рандомизированных исследований: наногидроксиапатит заметно снижал чувствительность зубов. Цифра: эффект −0,93 — это большой эффект.",m:"Боль при чувствительности — движение жидкости в открытых трубочках дентина. Частицы, похожие на минерал зуба, эти трубочки закупоривают.",d:"Раз в неделю оценивай реакцию зубов на воздух по шкале 0–10.",e:"минута",s:[1]},
+{id:"d4",c:"d",p:"P",q:"Холод — под вопросом",v:"В том же мета-анализе эффект был на воздух и прикосновение. На холод — не доказан: всего 2 исследования.",m:"Данных по холоду просто мало. Это не «не работает», а «пока не проверено как следует».",d:"Мороженое — не тест. Проверяй выдохом на зубы.",e:"минута",s:[1]},
+{id:"d5",c:"d",p:"P",q:"Ранний кариес — «возможно»",v:"Обзор 10 исследований: при реминерализации наногидроксиапатит работал на уровне фторида натрия. Но уверенность в доказательствах очень низкая. Цифра: 10 исследований.",m:"Начальный кариес — матовое белое пятно: минерал вымыт, поверхность цела. Частицы могут достраивать кристаллы, но клинических исследований мало и они короткие — в среднем 6 месяцев.",d:"Белое пятно — покажи стоматологу и следите вместе.",e:"визит",s:[0]},
+{id:"d6",c:"d",p:"P",q:"Во время кислотной атаки фтор сильнее",v:"В условиях деминерализации наногидроксиапатит терял больше минерала, чем фторид натрия, и не отличался от пасты без активов.",m:"Защищать в момент атаки — сильная сторона фтора. Поэтому связка «гидроксиапатит + фтор» в одном тюбике разумнее, чем гидроксиапатит вместо фтора.",d:"Основная паста — со фтором; без фтора — только по совету врача.",e:"минута",s:[0]},
+{id:"d7",c:"d",p:"P",q:"«Пломба» — это название, а не функция",v:"Производитель сам пишет: продукт не лечебный и визит к стоматологу не заменяет. Обзор не подтвердил, что гидроксиапатит останавливает кариес.",m:"Дырка — разрушенная структура зуба. Минерал может осесть на поверхность кристаллов, но объём не нарастит.",d:"Тёмная точка, застревает еда, боль от сладкого — к стоматологу.",e:"визит",w:"Любая дырка или боль в зубе — стоматолог, паста тут не поможет.",s:[14,0]},
+{id:"d8",c:"d",p:"P",q:"Ксилит — плюс маленький и шаткий",v:"Cochrane: фторная паста с ксилитом снижала кариес у детей на 13% сильнее обычной фторной за ~3 года. Уверенность низкая, у взрослых данных нет. Цифра: 13%.",m:"Бактерии налёта не могут сбраживать ксилит в кислоту. Но в пасте его мало, а контакт — пара минут.",d:"Не переплачивай за ксилит как за главный актив.",e:"минута",s:[4]},
+{id:"d9",c:"d",p:"P",q:"Аргинин — без доказательств",v:"Шведское агентство SBU: данных, что аргинин защищает от кариеса, недостаточно; главные исследования финансировал производитель. Такие пасты дороже обычной фторной примерно на 40%.",m:"Идея: бактерии расщепляют аргинин с образованием щёлочи и гасят кислоту налёта. В клинике это не доказано.",d:"Считай аргинин бонусом без гарантии.",e:"минута",s:[5]},
+{id:"d10",c:"d",p:"P",q:"Белее не станет",v:"На тюбике прямо: не содержит активных отбеливающих компонентов.",m:"Отбеливают перекиси или сильный абразив. Здесь нет ни того, ни другого: паста помогает снять свежий налёт, но цвет эмали не меняет.",d:"Хочешь белее — это вопрос к стоматологу.",e:"минута",s:[14]},
+{id:"d11",c:"d",p:"P",q:"RDA 70–90 — середина шкалы",v:"Производитель указывает RDA 70–90 и называет абразивность средней, для ежедневного очищения. Цифра: 70–90.",m:"RDA показывает, сколько дентина стирает паста по сравнению с эталоном. Средняя абразивность подходит для ежедневной чистки обычной щёткой.",d:"Чисти без сильного нажима.",e:"привычка",s:[14]},
+{id:"d12",c:"d",p:"P",q:"«Эмаль до 2 раз крепче» — это про лабораторию",v:"Сноска производителя: инструментальные испытания 2012 года в сравнении с пастой без гидроксиапатита. Цифра: 2012.",m:"«Крепость» в лаборатории — твёрдость образца эмали, а не кариес у людей. И сравнивали с пастой без гидроксиапатита, а не с обычной фторной.",d:"Звёздочки и сноски на упаковке читай первыми.",e:"минута",s:[14]},
+{id:"d13",c:"d",p:"P",q:"«Без SLS» — но его родственник в составе",v:"Обзор 4 рандомизированных исследований: без SLS афт в среднем на одну меньше и заживают они на 2 дня быстрее. В этой пасте SLS нет, но есть Sodium Coco-Sulfate.",m:"SCS — сульфаты всех жирных кислот кокосового масла, включая лауриловую. Он мягче SLS, но это тот же класс пенящих веществ, и на афты его отдельно не проверяли.",d:"Частые афты — понаблюдай месяц и сравни с прошлой пастой.",e:"привычка",s:[6,25]},
+{id:"d14",c:"d",p:"S",q:"Увлажнение работает, пока им пользуешься",v:"Cochrane, 77 рандомизированных исследований у людей с экземой: при регулярном увлажнении обострения за 6 месяцев были у 27% против 67%. Цифра: 27 против 67.",m:"Увлажняющее средство не лечит раз и навсегда — оно держит барьер, пока лежит на коже. Перестала — барьер снова теряет воду.",d:"Каждый день 2 недели, потом оцени.",e:"привычка",s:[16]},
+{id:"d15",c:"d",p:"S",q:"Церамиды — не волшебство",v:"Мета-анализ 5 рандомизированных исследований при атопическом дерматите: средства с церамидами чуть сильнее обычных снижали тяжесть, но по потере воды через кожу разницы не нашли. Цифра: 5 исследований.",m:"Барьер держат вместе вода, увлажнители и весь липидный «цемент». Церамиды — часть системы, а не кнопка.",d:"Не гоняйся за «больше церамидов» — важна регулярность.",e:"минута",s:[17]},
+{id:"d16",c:"d",p:"S",q:"Главный работяга — глицерин",v:"Обзор по глицерину: он увлажняет роговой слой, улучшает барьерную функцию и механические свойства кожи.",m:"Глицерин гигроскопичен: притягивает воду и держит её в верхнем слое кожи. Скромное имя, большая работа.",d:"Увидишь glycerin в составе другого средства — это плюс.",e:"минута",s:[18]},
+{id:"d17",c:"d",p:"S",q:"Три кита барьера в одной формуле",v:"На коробке LipidsRestore — 4 вида церамидов, холестерин, пальмитиновая и стеариновая кислоты. Всего 3% формулы. Цифра: 3%.",m:"Межклеточный «цемент» рогового слоя состоит из трёх классов: церамидов, холестерина и свободных жирных кислот. Формула повторяет этот набор.",d:"В других средствах ищи все три класса, а не только слово «церамиды».",e:"минута",s:[26]},
+{id:"d18",c:"d",p:"S",q:"4 ингредиента из списка дерматологов",v:"Среди ингредиентов, которые AAD советует при сухой коже, — глицерин, гиалуроновая кислота, диметикон и молочная кислота. Все четыре в составе; молочная — как лактат аммония. Цифра: 4.",m:"Это две линии обороны: увлажнители тянут воду, диметикон сверху не даёт ей испариться.",d:"Сыворотка годится как базовый шаг ухода.",e:"минута",s:[19]},
+{id:"d19",c:"d",p:"S",q:"По факту это лёгкий крем",v:"В составе стеарат глицерина, цетеариловый спирт и 7,5% смягчающих масел и силиконов — это эмульсия. AAD: кремы увлажняют сильнее лосьонов. Цифра: 7,5%.",m:"У слова «сыворотка» нет строгого определения. По структуре здесь эмульсия «масло в воде».",d:"Кожа не очень сухая — её одной может хватить.",e:"минута",s:[19]},
+{id:"d20",c:"d",p:"S",q:"Гладкость сразу — это сквалан и силиконы",v:"Сквалан 2% входит в группу смягчающих компонентов; по оценке CIR он безопасен для косметики. Цифра: 2%.",m:"Смягчители заполняют неровности между чешуйками — кожа сразу гладкая. Это мгновенный косметический эффект, а барьер восстанавливается неделями.",d:"Оценивай не по первому вечеру, а через 2 недели.",e:"привычка",s:[27]},
+{id:"d21",c:"d",p:"S",q:"Антивозраст здесь не обещан",v:"Ретинилпальмитат, токоферилацетат и гидроксиацетофенон вместе — 0,45% формулы. Цифра: 0,45%.",m:"Это добавки, которые защищают саму формулу. Про морщины на коробке ничего не обещают — и ждать этого не стоит.",d:"Для антивозрастных задач эта банка не инструмент.",e:"минута",s:[]},
+{id:"p1",c:"p",p:"P",q:"Не для малышей",v:"Производитель указывает: от 14 лет. Cochrane: концентрацию фтора для маленьких детей выбирают с оглядкой на риск флюороза. Цифра: 14+.",m:"Маленькие дети глотают пасту. Пока формируется эмаль постоянных зубов, лишний фтор может оставить на ней пятна.",d:"Детям — детская паста их возраста.",e:"минута",s:[14,3]},
+{id:"p2",c:"p",p:"P",q:"Ксилит опасен для собак",v:"FDA: у собак ксилит вызывает резкий выброс инсулина и падение сахара через 10–60 минут. Человеческую пасту собакам давать нельзя. Цифра: 10–60 минут.",m:"У людей такой реакции нет, а поджелудочная собаки принимает ксилит за сахар.",d:"Тюбик — туда, куда собака не дотянется.",e:"минута",w:"Собака съела пасту — сразу к ветеринару, не дожидаясь симптомов.",s:[13]},
+{id:"p3",c:"p",p:"P",q:"Ароматизатор — главный аллерген пасты",v:"DermNet: чаще всего реакцию на пасту дают ароматизаторы, особенно мятные. В составе — Aroma, лимонен и линалоол.",m:"Лимонен и линалоол — душистые вещества, которые в ЕС обязаны указывать в составе отдельно как возможные аллергены.",d:"Зуд или сухость губ после новой пасты — подозревай вкус.",e:"минута",s:[12]},
+{id:"p4",c:"p",p:"P",q:"Кокамидопропилбетаин мягкий, но не для всех",v:"DermNet: этот пенообразователь может вызывать аллергический хейлит — воспаление губ.",m:"Его добавляют для мягкой пены, и он же есть во многих шампунях и гелях. Если аллергия на него, реагировать будешь на все такие средства.",d:"Губы реагируют и на пасту, и на шампунь — ищи общий компонент.",e:"5 минут",s:[12]},
+{id:"p5",c:"p",p:"P",q:"Как понять, что виновата паста",v:"Реакция на пасту — хейлит (зудящие сухие губы), дерматит вокруг рта или жжение и шелушение во рту. После отмены проходит за несколько недель.",m:"Паста касается губ и кожи у рта дважды в день, поэтому даже слабый аллерген успевает разогнать реакцию.",d:"Отмени пасту на 2–3 недели и смотри.",e:"привычка",w:"Не проходит или отекают губы — к дерматологу на патч-тест со своей пастой.",s:[12]},
+{id:"p6",c:"p",p:"P",q:"Сколько фтора — не написано",v:"На сайте производителя концентрация фтора не указана. В Cochrane пасты с 440 ppm работали слабее: NNT 10,4 против 5,4 у 1450 ppm.",m:"NNT — сколько людей должны пользоваться пастой, чтобы один избежал кариеса. Чем меньше фтора, тем больше людей нужно на тот же эффект.",d:"Посмотри мелкий текст на тюбике: ppm или % фторида.",e:"минута",s:[14,3]},
+{id:"p7",c:"p",p:"P",q:"Нано-частицы — ложная тревога, но с условием",v:"Научный комитет ЕС (SCCS): нано-гидроксиапатит безопасен в пасте до 10%, если частицы палочковидные и без покрытия. Игольчатые частицы и спреи под заключение не попадают. Цифра: 10%.",m:"Риск определяет форма частиц. Какие частицы в этой пасте и сколько их — производитель публично не раскрывает.",d:"Пасту не глотай — чистке это не мешает.",e:"минута",s:[2,14]},
+{id:"p8",c:"p",p:"O",q:"Феноксиэтанол — ложная тревога",v:"SCCS: феноксиэтанол безопасен в косметике до 1%. Он есть и в пасте, и в сыворотке. Цифра: 1%.",m:"Консервант нужен, чтобы в водной формуле не росли микробы. Без консерванта средство опаснее, чем с ним.",d:"Страшилки про феноксиэтанол пропускай.",e:"минута",s:[22]},
+{id:"p9",c:"p",p:"P",q:"Побочка фтора у взрослых — минимальна",v:"В обзоре Cochrane побочные эффекты фторных паст сообщали редко, и они были минимальны: раздражение слизистой, окрашивание.",m:"Взрослый сплёвывает пасту, доза фтора мизерная. Главный риск — флюороз — касается детей, у которых формируется эмаль.",d:"Сплёвывай, не глотай — этого достаточно.",e:"привычка",s:[3]},
+{id:"p10",c:"p",p:"P",q:"Ксилит в пасте не слабит",v:"Cochrane: у детей, которые 3 года чистили зубы пастой с ксилитом, побочных эффектов не нашли. Цифра: 3 года.",m:"Слабительный эффект ксилита — от граммов в жвачках и сладостях. В пасте его мало, и её сплёвывают.",d:"Об этом можно не думать.",e:"ноль усилий",s:[4]},
+{id:"p11",c:"p",p:"S",q:"«Гипоаллергенно» не значит «без аллергии»",v:"FDA: у слова «гипоаллергенный» нет стандарта и определения, а доказательства компании предоставлять не обязаны.",m:"Обычно так пишут, когда убрали частые аллергены вроде отдушек. Но реакция возможна на любой компонент.",d:"Тест на руке делай всё равно.",e:"неделя",s:[21]},
+{id:"p12",c:"p",p:"S",q:"Витамин А — в пределах нормы",v:"ЕС с ноября 2025 ограничил витамин А в средствах для лица 0,3% в пересчёте на ретинол. Здесь ретинилпальмитата меньше 0,45% — это не больше 0,25% ретинола. Цифра: 0,25 из 0,3.",m:"Ограничение ввели из-за суммарного витамина А из еды и косметики. Эта банка укладывается даже в худшем случае.",d:"Беременна или планируешь — покажи состав врачу.",e:"минута",s:[23]},
+{id:"p13",c:"p",p:"S",q:"Реакция на тесте — что делать",v:"AAD: покраснело, зудит или отекает — сразу смыть и больше не использовать; помогают прохладный компресс или вазелин.",m:"Тестовый участок — разведка. Если реагирует рука, на лице, где кожа тоньше, будет не лучше.",d:"Смыть, компресс, сфотографировать состав для врача.",e:"минута",w:"Сильная реакция или не проходит — к дерматологу.",s:[20]},
+{id:"p14",c:"p",p:"S",q:"Увлажнитель воздуха может навредить",v:"AAD: увлажнитель нужно регулярно чистить, иначе в нём заводится плесень.",m:"Стоячая вода в тёплой комнате — питательная среда. Грязный увлажнитель распыляет по комнате то, что в нём выросло.",d:"Мой увлажнитель по инструкции производителя.",e:"10 минут в неделю",s:[19]}
+];
+var LN=["ВСКРЫТИЕ","МЕХАНИКА","ДЕЛАЙ"],LS=["что показали исследования","почему так","одно действие"];
+var INT=[1,3,7,16,35],DAY=864e5,KEY="vskrytie.pasta.v1",GL="▓▒░#%&@$/\\<>*+=?";
+var S={v:1,it:{}},OPEN={},ASK={},F="all",Q=null,persisted=false;
+var IDX={};C.forEach(function(c,i){IDX[c.id]=i});
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function rnd(seed){var t=(seed+0x6D2B79F5)>>>0;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}
+function hash(s){var h=7;for(var i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619)>>>0;return h}
+function erode(text,e,seed){if(e<=0)return esc(text);var o="";for(var i=0;i<text.length;i++){var ch=text[i];if(/[A-Za-zА-Яа-яЁё0-9]/.test(ch)&&rnd(seed+i*7919)<e)o+='<span class="g">'+esc(GL[Math.floor(rnd(seed+i*31)*GL.length)])+"</span>";else o+=esc(ch)}return o}
+function erosion(id){var s=S.it[id];if(!s||!s.o)return -1;return Math.max(0,Math.min(1,(Date.now()-s.last)/DAY/INT[s.b]))}
+function mark(id,ok){var s=S.it[id];if(!s)return;s.b=ok?Math.min(INT.length-1,s.b+1):0;s.last=Date.now();save()}
+function valid(s){return s&&typeof s==="object"&&s.it&&typeof s.it==="object"}
+function idb(fn){try{var r=indexedDB.open("vskrytie",1);r.onupgradeneeded=function(){r.result.createObjectStore("s")};r.onsuccess=function(){try{fn(r.result)}catch(e){}};r.onerror=function(){}}catch(e){}}
+function idbPut(v){idb(function(db){try{db.transaction("s","readwrite").objectStore("s").put(v,KEY)}catch(e){}})}
+function idbGet(cb){idb(function(db){try{var q=db.transaction("s","readonly").objectStore("s").get(KEY);q.onsuccess=function(){cb(q.result)};q.onerror=function(){cb(null)}}catch(e){cb(null)}})}
+function askPersist(){if(persisted)return;persisted=true;try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(function(){})}catch(e){}}
+function save(){S.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}idbPut(JSON.parse(JSON.stringify(S)));askPersist()}
+function load(){try{var s=JSON.parse(localStorage.getItem(KEY));if(valid(s)){S=s;return}}catch(e){}idbGet(function(v){if(valid(v)){S=v;renderAll()}})}
+function pad(n){return n<10?"0"+n:""+n}
+function fmt(ts){var d=new Date(ts);return pad(d.getDate())+"."+pad(d.getMonth()+1)+" · "+pad(d.getHours())+":"+pad(d.getMinutes())}
+function chips(c){return '<div class="chips"><span class="chip">'+CAT[c.c]+'</span><span class="chip">'+PR[c.p]+'</span></div>'}
+function layer(c,n,e,seed){var t='<div class="layer"><div class="t">'+LN[n]+'</div>';if(n===0)t+="<p>"+erode(c.v,e,seed+1)+"</p>";else if(n===1)t+="<p>"+erode(c.m,e,seed+2)+"</p>";else{t+='<p class="act">'+erode(c.d,e,seed+3)+'</p><p class="eff">Усилия: '+esc(c.e)+"</p>";if(c.w)t+='<p class="doc">Когда к врачу: '+esc(c.w)+"</p>"}return t+"</div>"}
+function cutHTML(n){return '<div class="cut" tabindex="0" role="button" aria-label="Разрез '+(n+1)+' из 3: открыть слой '+LN[n]+'"><div class="rail"><div class="dash"></div><div class="done"></div><div class="blade"></div></div><div class="cl">Разрез '+(n+1)+" из 3 · "+LN[n]+" — "+LS[n]+"</div></div>"}
+function caseHTML(c){var i=IDX[c.id],seed=hash(c.id),e=erosion(c.id),st=S.it[c.id],h="";var cls="case";if(st&&st.o)cls+=e>=1&&ASK[c.id]!==2?" grown":" done";h+='<article class="'+cls+'" data-id="'+c.id+'"><div class="top"><div class="num">'+pad(i+1)+"</div><div>"+chips(c);var qe=st&&st.o&&ASK[c.id]!==2?e*0.55:0;h+='<h3 class="q">'+erode(c.q,qe,seed)+"</h3></div></div>";if(st&&st.o){if(e>=1&&ASK[c.id]!==2){if(ASK[c.id]===1)h+='<div class="ask"><p>Помнишь, что внутри этого дела? Ответь себе честно, потом откроется суть.</p><div class="row"><button class="btn go" data-a="yes">Помню</button><button class="btn" data-a="no">Не помню</button></div></div>';else h+='<button class="regrow" data-a="grow">Заросло<span>Тапни и вспомни суть — 20 секунд</span></button>'}else{var le=ASK[c.id]===2?0:e*0.35;h+='<div class="layers">'+layer(c,0,le,seed)+layer(c,1,le,seed)+layer(c,2,le,seed)+"</div>";var nx=st.last+INT[st.b]*DAY,days=Math.max(0,Math.ceil((nx-Date.now())/DAY));h+='<div class="stamp"><span><b>вскрыто</b> '+fmt(st.o)+"</span><span>"+(days?"зарастёт через "+days+" дн.":"зарастёт сегодня")+"</span></div>"}}else{var n=OPEN[c.id]||0;h+='<div class="layers">';for(var k=0;k<n;k++)h+=layer(c,k,0,seed);h+="</div>"+cutHTML(n)}return h+"</article>"}
+function vis(c){if(F==="all")return true;if(F==="g")return erosion(c.id)>=1;if(F==="P"||F==="S")return c.p===F||c.p==="O";return c.c===F}
+var FL=[["all","Все 56"],["k","Как пользоваться"],["d","Что даст"],["p","Побочка"],["P","Паста"],["S","Сыворотка"],["g","Заросшие"]];
+function renderFilters(){$("filters").innerHTML=FL.map(function(f){return'<button data-f="'+f[0]+'" class="'+(F===f[0]?"on":"")+'">'+f[1]+"</button>"}).join("")}
+function renderList(){var a=C.filter(vis);$("list").innerHTML=a.length?a.map(caseHTML).join(""):'<p class="empty">Здесь пусто. Заросших дел нет — значит, всё свежее в голове.</p>'}
+function renderStat(){var o=0,g=0;C.forEach(function(c){var e=erosion(c.id);if(e>=0)o++;if(e>=1)g++});$("stat").innerHTML="<span>Вскрыто <b>"+o+"</b> из 56</span><span>Заросло <b>"+g+"</b></span><span>Как пользоваться <b>21</b> · Что даст <b>21</b> · Побочка <b>14</b></span>"}
+function rerender(id){var el=document.querySelector('.case[data-id="'+id+'"]');if(!el)return;var w=document.createElement("div");w.innerHTML=caseHTML(C[IDX[id]]);el.parentNode.replaceChild(w.firstChild,el);renderStat();if(!Q)renderQuiz()}
+function setP(cut,p,back){cut.classList.toggle("back",!!back);cut.style.setProperty("--p",p)}
+function finish(cut){var el=cut.closest(".case"),id=el.dataset.id,n=(OPEN[id]||0)+1;try{if(navigator.vibrate)navigator.vibrate(12)}catch(e){}if(n>=3){var t=Date.now();S.it[id]={o:t,last:t,b:0};ASK[id]=0;save();OPEN[id]=3}else OPEN[id]=n;rerender(id);var nc=document.querySelector('.case[data-id="'+id+'"] .cut');if(nc)try{nc.focus({preventScroll:true})}catch(e){}}
+var RM=false;try{RM=matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+function autoCut(cut){if(cut.dataset.busy)return;cut.dataset.busy="1";if(RM){setP(cut,1);finish(cut);return}var p0=parseFloat(cut.style.getPropertyValue("--p"))||0,t0=null;function step(ts){if(t0===null)t0=ts;var k=Math.min(1,(ts-t0)/450);setP(cut,p0+(1-p0)*k);if(k<1)requestAnimationFrame(step);else finish(cut)}requestAnimationFrame(step)}
+var drag=null;
+function lbl(cut,txt){var l=cut.querySelector(".cl");if(l){var old=l.textContent;l.textContent=txt;setTimeout(function(){if(l.isConnected)l.textContent=old},1400)}}
+document.addEventListener("pointerdown",function(ev){var cut=ev.target.closest&&ev.target.closest(".cut");if(!cut||cut.dataset.busy)return;var r=cut.querySelector(".rail").getBoundingClientRect(),x=(ev.clientX-r.left)/r.width;drag={cut:cut,r:r,x0:ev.clientX,y0:ev.clientY,p:0,ok:x<0.35,moved:false,cancel:false};drag.t=setTimeout(function(){if(drag&&drag.cut===cut&&!drag.moved){drag=null;autoCut(cut)}},550);try{cut.setPointerCapture(ev.pointerId)}catch(e){}});
+document.addEventListener("pointermove",function(ev){if(!drag)return;var dx=ev.clientX-drag.x0,dy=ev.clientY-drag.y0;if(!drag.moved&&(Math.abs(dx)>8||Math.abs(dy)>8)){drag.moved=true;clearTimeout(drag.t);if(Math.abs(dy)>Math.abs(dx))drag.cancel=true;else if(!drag.ok)lbl(drag.cut,"Начни разрез от левого края линии")}if(drag.cancel||!drag.ok)return;var p=Math.max(0,Math.min(1,(ev.clientX-drag.r.left)/drag.r.width));if(p>drag.p&&p<=drag.p+0.3)drag.p=p;setP(drag.cut,drag.p);if(drag.p>=0.94){var c=drag.cut;drag=null;c.dataset.busy="1";setP(c,1);finish(c)}});
+function endDrag(){if(!drag)return;clearTimeout(drag.t);if(drag.p<0.94)setP(drag.cut,0,true);drag=null}
+document.addEventListener("pointerup",endDrag);document.addEventListener("pointercancel",endDrag);
+document.addEventListener("contextmenu",function(ev){if(ev.target.closest&&ev.target.closest(".cut"))ev.preventDefault()});
+document.addEventListener("keydown",function(ev){var cut=ev.target.closest&&ev.target.closest(".cut");if(cut&&(ev.key==="Enter"||ev.key===" ")){ev.preventDefault();autoCut(cut)}});
+$("list").addEventListener("click",function(ev){var b=ev.target.closest("button[data-a]");if(!b)return;var id=b.closest(".case").dataset.id,a=b.dataset.a;if(a==="grow")ASK[id]=1;else if(a==="yes"){mark(id,true);ASK[id]=2}else if(a==="no"){mark(id,false);ASK[id]=2}rerender(id)});
+$("filters").addEventListener("click",function(ev){var b=ev.target.closest("button[data-f]");if(!b)return;F=b.dataset.f;renderFilters();renderList()});
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function quizStart(){var pool=C.filter(function(c){return erosion(c.id)>=0});if(pool.length<5){Q=null;renderQuiz();return}var items=shuffle(pool).slice(0,5).map(function(c){var others=shuffle(C.filter(function(x){return x.id!==c.id&&x.d!==c.d&&(x.p===c.p||x.p==="O"||c.p==="O")})).slice(0,2).map(function(x){return x.d});return{id:c.id,q:c.q,a:c.d,o:shuffle([c.d].concat(others))}});Q={items:items,i:0,score:0,pick:null};renderQuiz()}
+function renderQuiz(){var b=$("qbox"),n=C.filter(function(c){return erosion(c.id)>=0}).length;if(!Q){if(n<5)b.innerHTML='<p class="qn">Пока закрыто</p><p class="qq">Вскрой ещё '+(5-n)+" "+(5-n===1?"дело":5-n<5?"дела":"дел")+'</p><p class="qh">Вопросы берутся только из вскрытых дел.</p><a class="btn thin" href="#cases">К делам</a>';else b.innerHTML='<p class="qn">5 вопросов · 2 минуты</p><p class="qq">Улика есть — какое действие?</p><p class="qh">Ошибка отправит дело зарастать заново.</p><button class="btn go" id="qgo">Начать</button>';return}if(Q.i>=Q.items.length){b.innerHTML='<p class="qn">Готово</p><p class="qq">'+Q.score+" из 5</p><p class=\"qh\">"+(Q.score===5?"Чисто. Дела держатся.":"Ошибочные дела начнут зарастать с первого дня — вернись к ним через сутки.")+'</p><button class="btn" id="qgo">Ещё 5</button>';return}var it=Q.items[Q.i],c=C[IDX[it.id]],h='<p class="qn">Вопрос '+(Q.i+1)+" из 5 · дело "+pad(IDX[it.id]+1)+'</p><p class="qq">'+esc(it.q)+'</p><p class="qh">Что делать?</p>';it.o.forEach(function(o,k){var cls="opt";if(Q.pick!==null){if(o===it.a)cls+=" right";else if(k===Q.pick)cls+=" wrong"}h+='<button class="'+cls+'" data-k="'+k+'"'+(Q.pick!==null?" disabled":"")+">"+esc(o)+"</button>"});if(Q.pick!==null){var ok=it.o[Q.pick]===it.a;h+='<p class="res">'+(ok?"Верно. ":"Мимо. Дело "+pad(IDX[it.id]+1)+" начнёт зарастать заново. ")+esc(c.v)+'</p><div class="row" style="margin-top:14px"><button class="btn go" id="qnext">Дальше</button></div>'}b.innerHTML=h}
+$("qbox").addEventListener("click",function(ev){var t=ev.target;if(t.id==="qgo"){quizStart();return}if(t.id==="qnext"){Q.i++;Q.pick=null;renderQuiz();return}var o=t.closest(".opt");if(!o||!Q||Q.pick!==null)return;var it=Q.items[Q.i];Q.pick=+o.dataset.k;if(it.o[Q.pick]===it.a){Q.score++;mark(it.id,true)}else mark(it.id,false);ASK[it.id]=0;renderQuiz();rerender(it.id)});
+function renderSheet(){var h="";["k","d","p"].forEach(function(k){h+="<h3>"+CAT[k]+"</h3>";C.forEach(function(c,i){if(c.c!==k)return;h+='<div class="it"><span class="n">'+pad(i+1)+"</span><div><b>"+esc(c.d)+"</b><span>"+PR[c.p]+" · "+esc(c.e)+"</span></div></div>"})});$("sheetbox").innerHTML=h}
+function renderSrc(){$("srcbox").innerHTML=SRC.map(function(s){return'<li>'+esc(s.t)+'. <a href="'+s.u+'" target="_blank" rel="noopener">'+esc(s.u.replace(/^https:\/\//,""))+"</a></li>"}).join("")}
+function enc(o){return btoa(unescape(encodeURIComponent(JSON.stringify(o))))}
+function dec(s){return JSON.parse(decodeURIComponent(escape(atob(s.trim()))))}
+$("copy").addEventListener("click",function(){var code=enc(S);$("code").value=code;var done=function(){$("msg").textContent="Код скопирован. Сохрани его в заметки."};try{navigator.clipboard.writeText(code).then(done,function(){$("code").select();$("msg").textContent="Код в поле — выдели и скопируй."})}catch(e){$("code").select();$("msg").textContent="Код в поле — выдели и скопируй."}});
+$("restore").addEventListener("click",function(){try{var s=dec($("code").value);if(!valid(s))throw 0;S=s;save();renderAll();$("msg").textContent="Прогресс восстановлен."}catch(e){$("msg").textContent="Код не подошёл. Проверь, что вставлен целиком."}});
+function renderAll(){renderStat();renderFilters();renderList();renderQuiz();renderSheet();renderSrc()}
+load();renderAll();
+setInterval(function(){if(!drag){renderStat();if(!document.querySelector(".case .ask"))renderList()}},60000);
+</script>
+</body>
+</html>
